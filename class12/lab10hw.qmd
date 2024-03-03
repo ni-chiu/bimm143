@@ -1,0 +1,38 @@
+---
+title: "lab12hw"
+author: "Nicholas Chiu"
+format: pdf
+---
+
+## Section 4: Population Scale Analysis
+
+## Q13
+```{r}
+link <- "https://bioboot.github.io/bggn213_W19/class-material/rs8067378_ENSG00000172057.6.txt"
+
+expr <- read.table(link)
+head(expr)
+dim(expr)
+
+table(expr$geno)
+median(expr$exp[expr$geno == "A/A"])
+median(expr$exp[expr$geno == "A/G"])
+median(expr$exp[expr$geno == "G/G"])
+```
+Q13: 
+Sample size: 108 A/A, 233 A/G, 121 G/G
+Median expression: 31.25 A/A, 25.06 A/G, 20.07 G/G
+
+
+## Q14
+```{r}
+## Make boxplot
+
+library(ggplot2)
+ggplot(expr) + aes(geno, exp, fill = geno) + geom_boxplot(notch=T)
+
+```
+Q14: Based on the generated boxplot, we can infer that the difference in
+relative expression values between A/A and G/G are significantly different. That
+implies that the SNP affects the expression of ORMDL3.
+

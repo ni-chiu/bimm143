@@ -1,0 +1,234 @@
+---
+title: "Lab 13: DESeq"
+author: "Nicholas Chiu"
+format: pdf
+---
+
+## 3. Import countData and colData
+
+```{r}
+# Import the data
+counts <- read.csv("airway_scaledcounts.csv", row.names=1)
+metadata <-  read.csv("airway_metadata.csv")
+
+head(counts)
+
+head(metadata)
+
+dim(counts)
+dim(metadata)
+length(metadata$dex[metadata$dex == "control"])
+
+```
+Q1: 38694
+
+Q2: 4
+
+## 4. Toy differential gene expression
+
+```{r}
+control <- metadata[metadata[,"dex"]=="control",]
+control.counts <- counts[ ,control$id]
+control.mean <- rowSums( control.counts )/4 
+head(control.mean)
+
+## Alternate method
+#library(dplyr)
+#control <- metadata %>% filter(dex=="control")
+#control.counts <- counts %>% select(control$id) 
+#control.mean <- rowSums(control.counts)/4
+#head(control.mean)
+
+treated <- metadata[metadata[,"dex"]=="treated",]
+treated.mean <- rowSums( counts[ ,treated$id] ) / 4
+head(treated.mean)
+
+meancounts <- data.frame(control.mean, treated.mean)
+
+```
+Side-note: I prefer the dplyr method because it is more streamlined and 
+clearly shows what is being accessed via the pipe function.
+
+Q3: To make the code more robust, we can use rowMeans instead of rowSums
+and calculating the mean manually.
+
+Q4: Above
+
+```{r}
+# Plot mean of treated against mean of control
+plot(meancounts[,1],meancounts[,2], xlab="Control", ylab="Treated")
+
+plot(meancounts[,1],meancounts[,2], log="xy", xlab="Control", ylab="Treated")
+
+```
+Q5: a) Above b) geom_point()
+
+Q6: Above
+
+```{r}
+meancounts$log2fc <- log2(meancounts[,"treated.mean"]/meancounts[,"control.mean"])
+head(meancounts)
+
+zero.vals <- which(meancounts[,1:2]==0, arr.ind=TRUE)
+
+to.rm <- unique(zero.vals[,1])
+mycounts <- meancounts[-to.rm,]
+head(mycounts)
+
+up.ind <- mycounts$log2fc > 2
+
+sum(mycounts$log2fc > 2)
+
+down.ind <- mycounts$log2fc < (-2)
+
+sum(mycounts$log2fc < -2)
+
+```
+Q7: The arr.ind argument returns the array indices if it set to TRUE. We call
+unique to ensure that we are not double counting the rows with 0 in both samples.
+
+Q8: 250
+
+Q9: 367
+
+Q10: I do not trust these results because there is not enough evidence to support
+that all fold changes are statistically significant.
+
+## 5. Setting up for DESeq
+
+```{r}
+library(DESeq2)
+citation("DESeq2")
+
+dds <- DESeqDataSetFromMatrix(countData=counts, 
+                              colData=metadata, 
+                              design=~dex)
+dds
+```
+
+## 6. PCA
+
+```{r}
+library(ggplot2)
+vsd <- vst(dds, blind = FALSE)
+plotPCA(vsd, intgroup = c("dex"))
+
+pcaData <- plotPCA(vsd, intgroup=c("dex"), returnData=TRUE)
+head(pcaData)
+
+# Calculate percent variance per PC for the plot axis labels
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+ggplot(pcaData) +
+  aes(x = PC1, y = PC2, color = dex) +
+  geom_point(size =3) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+  coord_fixed() +
+  theme_bw()
+```
+
+## 7. DESeq analysis
+
+```{r}
+dds <- DESeq(dds)
+res <- results(dds)
+res
+
+summary(res)
+
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+
+```
+
+## 8. Adding annotation data
+
+```{r}
+library("AnnotationDbi")
+library("org.Hs.eg.db")
+
+columns(org.Hs.eg.db)
+
+res$symbol <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res),      # Our genenames
+                     keytype="ENSEMBL",        # The format of our genenames
+                     column="SYMBOL",          # The new format we want to add
+                     multiVals="first")
+
+res$entrez <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res),
+                     column="ENTREZID",
+                     keytype="ENSEMBL",
+                     multiVals="first")
+
+res$uniprot <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res),
+                     column="UNIPROT",
+                     keytype="ENSEMBL",
+                     multiVals="first")
+
+res$genename <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res),
+                     column="GENENAME",
+                     keytype="ENSEMBL",
+                     multiVals="first")
+
+head(res)
+
+
+```
+Q11: Above
+
+```{r}
+ord <- order( res$padj )
+#View(res[ord,])
+head(res[ord,])
+
+write.csv(res[ord,], "deseq_results.csv")
+
+```
+
+## 9. Data Visualization
+
+```{r}
+plot( res$log2FoldChange,  -log(res$padj), 
+      xlab="Log2(FoldChange)",
+      ylab="-Log(P-value)")
+
+plot( res$log2FoldChange,  -log(res$padj), 
+ ylab="-Log(P-value)", xlab="Log2(FoldChange)")
+
+# Add some cut-off lines
+abline(v=c(-2,2), col="darkgray", lty=2)
+abline(h=-log(0.05), col="darkgray", lty=2)
+
+# Setup our custom point color vector 
+mycols <- rep("gray", nrow(res))
+mycols[ abs(res$log2FoldChange) > 2 ]  <- "red" 
+
+inds <- (res$padj < 0.01) & (abs(res$log2FoldChange) > 2 )
+mycols[ inds ] <- "blue"
+
+# Volcano plot with custom colors 
+plot( res$log2FoldChange,  -log(res$padj), 
+ col=mycols, ylab="-Log(P-value)", xlab="Log2(FoldChange)" )
+
+# Cut-off lines
+abline(v=c(-2,2), col="gray", lty=2)
+abline(h=-log(0.1), col="gray", lty=2)
+
+#BiocManager::install("EnhancedVolcano")
+library(EnhancedVolcano)
+
+x <- as.data.frame(res)
+
+EnhancedVolcano(x,
+    lab = x$symbol,
+    x = 'log2FoldChange',
+    y = 'pvalue')
+```
+
+## 10. Pathway analysis
+
+Optional
