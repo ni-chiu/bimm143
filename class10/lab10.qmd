@@ -1,0 +1,147 @@
+---
+title: "Lab 10: Structural Bioinformatics 1"
+author: "Nicholas Chiu"
+format: pdf
+---
+
+## 1. PDB Statistics
+
+```{r}
+## PDB Statistics
+csv <- "C:\\Users\\iWumb\\OneDrive\\Desktop\\UCSD\\Winter 24\\BIMM143\\BIMM143 R\\class10\\Data Export Summary.csv"
+
+df <- read.csv(csv, header=TRUE, stringsAsFactors=FALSE)
+
+df
+
+totals <- 187089 + 11579 + 12631 + 4381 + 206 + 22
+
+xrayEM <- 161793+12645+9358+2177+8405+3933+2760+125+164+9+11
+
+# proportion solved by xray or EM
+xrayEM / totals
+
+proteins <- 187089 + 11579 + 12631
+
+# proportion of protein
+proteins/totals
+
+```
+
+Q1: 93.3% of structures in the PDB are solved by x-ray and EM
+
+Q2: 0.979 of structures in the PDB are protein
+
+Q3: There are 455 HIV proteases in the current PDB
+
+## 2. Visualizing the HIV-1 protease structure
+
+Q4: We only see one atom per water molecule because only the oxygen is important to show in the diagram. 
+
+Q5: HOH 308 ![Critical Water](conservedwater.png)
+
+Q6: ![1HSG](1HSG.png)
+
+Q7: Optional
+
+## 3. Introduction to Bio3D in R
+
+```{r}
+library(bio3d)
+
+# Reading PDB file data into R
+pdb <- read.pdb("1hsg")
+
+pdb
+
+attributes(pdb)
+
+head(pdb$atom)
+
+# Predicting functional motions of a single structure
+adk <- read.pdb("6s36")
+
+adk
+
+m <- nma(adk)
+
+m
+
+plot(m)
+
+mktrj(m, file="adk_m7.pdb")
+
+```
+
+## 4. Comparative structure analysis of Adenylate Kinase
+
+```{r}
+## Search and retrieve ADK structures
+
+library(bio3d)
+
+aa <- get.seq("1ake_A")
+
+aa
+
+#b <- blast.pdb(aa)
+
+# Plot a summary of search results
+#hits <- plot(b)
+
+# List out some 'top hits'
+#head(hits$pdb.id)
+
+hits <- NULL
+
+hits$pdb.id <- c('1AKE_A','6S36_A','6RZE_A','3HPR_A','1E4V_A','5EJE_A','1E4Y_A','3X2S_A','6HAP_A','6HAM_A','4K46_A','3GMT_A','4PZL_A')
+
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+
+```
+
+```{r}
+## Align and superpose structures
+
+# Align releated PDBs
+pdbs <- pdbaln(files, fit = TRUE, exefile="msa")
+
+# Vector containing PDB codes for figure axis
+ids <- basename.pdb(pdbs$id)
+
+# Draw schematic alignment
+
+## Rendering plot causes margin too large error. Commented out for submission
+
+#par(mar = c(1, 1, 1, 1))
+#plot(pdbs, labels=ids)
+```
+
+
+```{r}
+## Annotate collected PDB structures
+
+anno <- pdb.annotate(ids)
+unique(anno$source)
+
+anno
+
+## PCA
+# Perform PCA
+pc.xray <- pca(pdbs)
+plot(pc.xray)
+
+# Calculate RMSD
+rd <- rmsd(pdbs)
+
+# Structure-based clustering
+hc.rd <- hclust(dist(rd))
+grps.rd <- cutree(hc.rd, k=3)
+
+plot(pc.xray, 1:2, col="grey50", bg=grps.rd, pch=21, cex=1)
+```
+
+
+
+
+
