@@ -1,0 +1,89 @@
+---
+title: "lab6HW"
+author: "Nicholas Chiu"
+date: "01/28/2024"
+format: pdf
+---
+## Library Installation
+
+```{r}
+#install.packages("bio3d") 
+```
+
+
+## Orignal Code
+
+```{r}
+# Can you improve this analysis code?
+library(bio3d)
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+#s1
+#s2
+#s3
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+
+#s1
+#s1.chainA
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor") 
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor") 
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+```
+
+## Question 6: Generalized Function
+
+```{r}
+# The plotBFactor function takes an input of protein structures as a
+# vector of strings, trims the protein sequence based on desired parameters.
+# It then plots B Factor (y) to Residue (x). 
+#
+# parameter input: a string vector of protein structures
+# return: plot(s) of protein B Factor vs. Residue
+plotBFactor <- function(input) {
+
+  vecLength <- length(input)
+  
+  # Iterate over input vector to plot each protein structure given
+  for (x in 1:vecLength) {
+    
+    # If input is not a character vector, break the loop (invalid input)
+    if (is.character(input[x]) != T) {
+      break
+    }
+    
+    # read protein structure at index x
+    curr <- read.pdb(input[x])
+    
+    # trim the chain
+    curr.chainA <- trim.pdb(curr, chain="A", elety="CA")
+    curr.b <- curr.chainA$atom$b
+    
+    # plot b factor against residue 
+    plotb3(curr.b, sse=curr.chainA, typ="l", ylab="Bfactor") 
+  }
+  
+}
+```
+
+Run function with original inputs
+
+```{r}
+plotBFactor("4AKE")
+plotBFactor("1AKE")
+plotBFactor("1E4Y")
+
+vec <- c("4AKE", "1AKE", "1E4Y")
+plotBFactor(vec)
+```
+
+
