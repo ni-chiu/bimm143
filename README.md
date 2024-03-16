@@ -26,8 +26,8 @@ Class 12 - [Genome Informatics and High Throughput Sequencing (NGS, RNA-Seq, and
 
 Class 13 - [Transcriptomics and RNA-Seq Analysis](https://github.com/ni-chiu/bimm143/blob/main/class13/lab13.qmd)
 
-Class 14 - [Genome Annotation and Using Functional Databases (KEGG and GO - Gene Ontology)]()
+Class 14 - [Genome Annotation and Using Functional Databases (KEGG and GO - Gene Ontology)](https://github.com/ni-chiu/bimm143/blob/main/class14/lab14.qmd)
 
-Class 17 - [Analyzing Sequencing Data in the Cloud]()
+Class 17 - [Analyzing Sequencing Data in the Cloud](https://github.com/ni-chiu/bimm143/blob/main/class17/lab17.qmd)
 
-Class 18 - [Investigating Pertussis Resurgence Using Web Scraping, JSON-based APIs, and Advanced dplyr and ggplot]()
+Class 18 - [Investigating Pertussis Resurgence Using Web Scraping, JSON-based APIs, and Advanced dplyr and ggplot](https://github.com/ni-chiu/bimm143/blob/main/class18/lab18.qmd)
