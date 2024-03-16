@@ -1,7 +1,7 @@
 ---
 title: "Class 05: Data Visualization with GGPLOT"
 author: "Nicholas Chiu"
-format: html
+format: markdown
 ---
 
 ## Installing ggplot2
