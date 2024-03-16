@@ -1,59 +1,42 @@
----
-author:
-- Nicholas Chiu
-title: "Class 05: Data Visualization with GGPLOT"
-toc-title: Table of contents
----
+# Class 05: Data Visualization with GGPLOT
+Nicholas Chiu
 
 ## Installing ggplot2
 
-::: cell
-``` {.r .cell-code}
+``` r
 #install.packages("ggplot2")
 library(ggplot2)
 ```
-:::
 
 ## Running Code
 
-::: cell
-``` {.r .cell-code}
+``` r
 ggplot(cars) 
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-2-1.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(cars) + aes(x=speed, y=dist)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-2-2.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-2-2.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(cars) + aes(x=speed, y=dist) + geom_point()
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-2-3.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-2-3.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(cars) + aes(x=speed, y=dist) + geom_point() + geom_smooth(method = "lm", se = F)
 ```
 
-::: {.cell-output .cell-output-stderr}
     `geom_smooth()` using formula = 'y ~ x'
-:::
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-2-4.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-2-4.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(cars) + 
   aes(x=speed, y=dist) +
   geom_point() +
@@ -65,25 +48,18 @@ ggplot(cars) +
   theme_bw()
 ```
 
-::: {.cell-output .cell-output-stderr}
     `geom_smooth()` using formula = 'y ~ x'
-:::
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-2-5.png)
-:::
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-2-5.png)
 
 ## More plot aesthetics using aes()
 
-::: cell
-``` {.r .cell-code}
+``` r
 url <- "https://bioboot.github.io/bimm143_S20/class-material/up_down_expression.txt"
 genes <- read.delim(url)
 head(genes)
 ```
 
-::: {.cell-output .cell-output-stdout}
             Gene Condition1 Condition2      State
     1      A4GNT -3.6808610 -3.4401355 unchanging
     2       AAAS  4.5479580  4.3864126 unchanging
@@ -91,105 +67,82 @@ head(genes)
     4       AATF  5.0784720  5.0151916 unchanging
     5       AATK  0.4711421  0.5598642 unchanging
     6 AB015752.4 -3.6808610 -3.5921390 unchanging
-:::
 
-``` {.r .cell-code}
+``` r
 nrow(genes)
 ```
 
-::: {.cell-output .cell-output-stdout}
     [1] 5196
-:::
 
-``` {.r .cell-code}
+``` r
 colnames(genes)
 ```
 
-::: {.cell-output .cell-output-stdout}
     [1] "Gene"       "Condition1" "Condition2" "State"     
-:::
 
-``` {.r .cell-code}
+``` r
 ncol(genes)
 ```
 
-::: {.cell-output .cell-output-stdout}
     [1] 4
-:::
 
-``` {.r .cell-code}
+``` r
 table(genes$State)
 ```
 
-::: {.cell-output .cell-output-stdout}
 
           down unchanging         up 
             72       4997        127 
-:::
 
-``` {.r .cell-code}
+``` r
 upregulatedFraction <- 127 / (72 + 4997 + 127)
 upregulatedFraction
 ```
 
-::: {.cell-output .cell-output-stdout}
     [1] 0.02444188
-:::
 
-``` {.r .cell-code}
+``` r
 round( table(genes$State)/nrow(genes) * 100, 2 )
 ```
 
-::: {.cell-output .cell-output-stdout}
 
           down unchanging         up 
           1.39      96.17       2.44 
-:::
 
-``` {.r .cell-code}
+``` r
 ggplot(genes) + 
     aes(x=Condition1, y=Condition2) + geom_point()
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-3-1.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
-``` {.r .cell-code}
+``` r
 p <- ggplot(genes) + 
     aes(x=Condition1, y=Condition2, col=State) +
     geom_point()
 p
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-3-2.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-3-2.png)
 
-``` {.r .cell-code}
+``` r
 p + scale_colour_manual( values=c("blue","gray","red") )
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-3-3.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-3-3.png)
 
-``` {.r .cell-code}
+``` r
 p + labs(title="Gene Expression Changes Upon Drug Treatment",
        x="Control (no drug)", 
        y="Drug Treatment",
        caption="Dataset: 'genes'") + scale_colour_manual( values=c("blue","gray","red") )
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-3-4.png)
-:::
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-3-4.png)
 
 ## Going Further
 
-::: cell
-``` {.r .cell-code}
+``` r
 # File location online
 url <- "https://raw.githubusercontent.com/jennybc/gapminder/master/inst/extdata/gapminder.tsv"
 
@@ -198,30 +151,23 @@ gapminder <- read.delim(url)
 library(dplyr)
 ```
 
-::: {.cell-output .cell-output-stderr}
 
     Attaching package: 'dplyr'
-:::
 
-::: {.cell-output .cell-output-stderr}
     The following objects are masked from 'package:stats':
 
         filter, lag
-:::
 
-::: {.cell-output .cell-output-stderr}
     The following objects are masked from 'package:base':
 
         intersect, setdiff, setequal, union
-:::
 
-``` {.r .cell-code}
+``` r
 gapminder_2007 <- gapminder %>% filter(year==2007)
 
 gapminder_2007 
 ```
 
-::: {.cell-output .cell-output-stdout}
                          country continent year lifeExp        pop  gdpPercap
     1                Afghanistan      Asia 2007  43.828   31889923   974.5803
     2                    Albania    Europe 2007  76.423    3600523  5937.0295
@@ -365,74 +311,59 @@ gapminder_2007
     140              Yemen, Rep.      Asia 2007  62.698   22211743  2280.7699
     141                   Zambia    Africa 2007  42.384   11746035  1271.2116
     142                 Zimbabwe    Africa 2007  43.487   12311143   469.7093
-:::
 
-``` {.r .cell-code}
+``` r
 colnames(gapminder)
 ```
 
-::: {.cell-output .cell-output-stdout}
     [1] "country"   "continent" "year"      "lifeExp"   "pop"       "gdpPercap"
-:::
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_2007) + aes(x=gdpPercap, y=lifeExp) + geom_point()
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-1.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_2007) + aes(x=gdpPercap, y=lifeExp) + geom_point(alpha=0.5)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-2.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-2.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_2007) +
   aes(x=gdpPercap, y=lifeExp, color=continent, size=pop) +
   geom_point(alpha=0.5)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-3.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-3.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_2007) + 
   aes(x = gdpPercap, y = lifeExp, color = pop) +
   geom_point(alpha=0.8)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-4.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-4.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_2007) + 
   aes(x = gdpPercap, y = lifeExp, size = pop) +
   geom_point(alpha=0.5)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-5.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-5.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_2007) + 
   geom_point(aes(x = gdpPercap, y = lifeExp,
                  size = pop), alpha=0.5) + 
   scale_size_area(max_size = 10)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-6.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-6.png)
 
-``` {.r .cell-code}
+``` r
 gapminder_1957 <- gapminder %>% filter(year==1957)
 
 ggplot(gapminder_1957) + 
@@ -440,11 +371,9 @@ ggplot(gapminder_1957) +
                  size = pop), alpha = 0.7) + scale_size_area(max_size = 15)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-7.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-7.png)
 
-``` {.r .cell-code}
+``` r
 gapminder_1957_2007 <- gapminder %>% filter(year==1957 | year==2007)
 ggplot(gapminder_1957_2007) + 
   geom_point(aes(x = gdpPercap, y = lifeExp, color = continent,
@@ -452,15 +381,11 @@ ggplot(gapminder_1957_2007) +
                 facet_wrap(~year)
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-4-8.png)
-:::
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-4-8.png)
 
 ## Bar Charts
 
-::: cell
-``` {.r .cell-code}
+``` r
 gapminder_top5 <- gapminder %>% 
   filter(year==2007) %>% 
   arrange(desc(pop)) %>% 
@@ -469,67 +394,54 @@ gapminder_top5 <- gapminder %>%
 gapminder_top5
 ```
 
-::: {.cell-output .cell-output-stdout}
             country continent year lifeExp        pop gdpPercap
     1         China      Asia 2007  72.961 1318683096  4959.115
     2         India      Asia 2007  64.698 1110396331  2452.210
     3 United States  Americas 2007  78.242  301139947 42951.653
     4     Indonesia      Asia 2007  70.650  223547000  3540.652
     5        Brazil  Americas 2007  72.390  190010647  9065.801
-:::
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_top5) + 
   geom_col(aes(x = country, y = pop))
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-5-1.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_top5) + 
   geom_col(aes(x = country, y = lifeExp))
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-5-2.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-5-2.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_top5) + 
   geom_col(aes(x = country, y = pop, fill = continent))
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-5-3.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-5-3.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_top5) + 
   geom_col(aes(x = country, y = pop, fill = lifeExp))
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-5-4.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-5-4.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(gapminder_top5) +
   aes(x=reorder(country, -pop), y=pop, fill=country) +
   geom_col(col="gray30") +
   guides(fill="none")
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-5-5.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-5-5.png)
 
-``` {.r .cell-code}
+``` r
 head(USArrests)
 ```
 
-::: {.cell-output .cell-output-stdout}
                Murder Assault UrbanPop Rape
     Alabama      13.2     236       58 21.2
     Alaska       10.0     263       48 44.5
@@ -537,9 +449,8 @@ head(USArrests)
     Arkansas      8.8     190       50 19.5
     California    9.0     276       91 40.6
     Colorado      7.9     204       78 38.7
-:::
 
-``` {.r .cell-code}
+``` r
 USArrests$State <- rownames(USArrests)
 ggplot(USArrests) +
   aes(x=reorder(State,Murder), y=Murder) +
@@ -547,11 +458,9 @@ ggplot(USArrests) +
   coord_flip()
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-5-6.png)
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-5-6.png)
 
-``` {.r .cell-code}
+``` r
 ggplot(USArrests) +
   aes(x=reorder(State,Murder), y=Murder) +
   geom_point() +
@@ -562,15 +471,11 @@ ggplot(USArrests) +
   coord_flip()
 ```
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-5-7.png)
-:::
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-5-7.png)
 
 ## Animations
 
-::: cell
-``` {.r .cell-code}
+``` r
 # Setup nice regular ggplot of the gapminder data
 #install.packages("gifski")
 #install.packages("gganimate")
@@ -590,12 +495,10 @@ ggplot(USArrests) +
 #   transition_time(year) +
 #   ease_aes('linear')
 ```
-:::
 
 ## Combining Plots
 
-::: cell
-``` {.r .cell-code}
+``` r
 #install.packages("patchwork")
 
 library(patchwork)
@@ -611,11 +514,6 @@ p4 <- ggplot(mtcars) + geom_bar(aes(carb))
       p4
 ```
 
-::: {.cell-output .cell-output-stderr}
     `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
-:::
 
-::: cell-output-display
-![](class05_files/figure-markdown/unnamed-chunk-7-1.png)
-:::
-:::
+![](class05.markdown_github_files/figure-markdown_github/unnamed-chunk-7-1.png)
