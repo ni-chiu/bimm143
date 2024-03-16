@@ -2,7 +2,7 @@
 title: "Mini-Project: Unsupervised Learning Analysis of Human Breast Cancer Cells"
 author: "Nicholas Chiu"
 Date: "2024-02-11"
-format: pdf
+format: markdown_github
 ---
 
 ## 1. EDA

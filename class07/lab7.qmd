@@ -2,7 +2,7 @@
 title: "Lab 7: PCA"
 author: "Nicholas Chiu"
 date: "02/03/2024"
-format: pdf
+format: markdown_github
 ---
 
 ## Data Import, Q1

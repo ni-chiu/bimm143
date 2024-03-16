@@ -1,7 +1,7 @@
 ---
 title: "Lab 14: DESeq Mini Project"
 author: "Nicholas Chiu"
-format: pdf
+format: markdown_github
 ---
 
 ## Section 1. Differential Expression Analysis

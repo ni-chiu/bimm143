@@ -1,7 +1,7 @@
 ---
 title: "lab12hw"
 author: "Nicholas Chiu"
-format: pdf
+format: markdown_github
 ---
 
 ## Section 4: Population Scale Analysis

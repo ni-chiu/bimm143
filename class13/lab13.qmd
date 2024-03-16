@@ -1,7 +1,7 @@
 ---
 title: "Lab 13: DESeq"
 author: "Nicholas Chiu"
-format: pdf
+format: markdown_github
 ---
 
 ## 3. Import countData and colData

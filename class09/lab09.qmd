@@ -1,7 +1,7 @@
 ---
 title: "Lab 10: Halloween Mini-Project"
 author: "Nicholas Chiu"
-format: pdf
+format: markdown_github
 ---
 
 ## 1. Importing Candy Data

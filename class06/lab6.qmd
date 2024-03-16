@@ -2,7 +2,7 @@
 title: "Class 6: R Functions Lab"
 author: "Nicholas Chiu"
 date: 01/25/2024
-format: pdf
+format: markdown_github
 ---
 ## R Functions
 

@@ -1,14 +1,14 @@
 ---
 title: "Lab 10: Structural Bioinformatics 1"
 author: "Nicholas Chiu"
-format: pdf
+format: markdown_github
 ---
 
 ## 1. PDB Statistics
 
 ```{r}
 ## PDB Statistics
-csv <- "C:\\Users\\iWumb\\OneDrive\\Desktop\\UCSD\\Winter 24\\BIMM143\\BIMM143 R\\class10\\Data Export Summary.csv"
+csv <- "C:/Users/iWumb/OneDrive/Desktop/UCSD/Github/bimm143_github/class10/Data Export Summary.csv"
 
 df <- read.csv(csv, header=TRUE, stringsAsFactors=FALSE)
 
