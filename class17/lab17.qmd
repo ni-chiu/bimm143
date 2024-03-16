@@ -1,7 +1,7 @@
 ---
 title: "Lab 17: Analyzing Sequencing Data in the Cloud"
 author: "Nicholas Chiu"
-format: pdf
+format: markdown_github
 ---
 ## Downstream Analysis
 ```{r}
